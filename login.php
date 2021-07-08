@@ -15,7 +15,7 @@ if(isset($_SESSION["project1_username"]) && isset($_SESSION["project1_password"]
     $password = $data["password"];
 }
 session_write_close();
-//$username = $_COOKIE["project1_username"];//前端直接保存cookie
+//$username = $_COOKIE["project1_username"];//前端直接读取cookie
 //$password = $_COOKIE["project1_password"];
 
 //正则验证用户名和密码
@@ -28,6 +28,7 @@ if (!preg_match("/^.{6,32}$/", $password)) {
     exit(json_encode($ans));
 }
 
+//连接数据库
 $conn = mysqli_connect("localhost", "root", "wi2MyfO4,ci&", "project1");
 if (!$conn) {
     //数据库连接失败
@@ -40,10 +41,11 @@ if (!mysqli_set_charset($conn, "utf8MB4")) {
     exit(json_encode($ans));
 }
 
+//查询用户名与密码正确性
 $sql = "select id from users where username = '$username' and password = '$password'";
 $result = mysqli_query($conn, $sql);
 if (mysqli_fetch_array($result)) {
-    //用户名成功登录
+    //用户名成功登录，写session
     session_start();
     $_SESSION["project1_username"] = $username;
     $_SESSION["project1_password"] = $password;

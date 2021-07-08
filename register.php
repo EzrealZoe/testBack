@@ -5,6 +5,8 @@ header('Access-Control-Request-Method:GET,POST');
 header("Access-Control-Allow-Credentials:true");
 $ans = array("status" => "200");
 $data = json_decode(file_get_contents("php://input"), true);
+
+//地区信息
 $district_cate = array();
 $district_cate[1] = [40000];
 $district_cate[2] = [200];
@@ -386,7 +388,7 @@ $province = $data["province"];
 $city = $data["city"];
 $area = $data["area"];
 
-
+//正则验证
 if (!preg_match("/^[A-Za-z0-9]+([_]+[A-Za-z0-9]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$/", $email)) {
     $ans["status"] = 2001;
     exit(json_encode($ans));
@@ -442,7 +444,7 @@ try {
     exit(json_encode($ans));
 }
 
-
+//连接数据库
 $conn = mysqli_connect("localhost", "root", "wi2MyfO4,ci&", "project1");
 if (!$conn) {
     //数据库连接失败
@@ -455,6 +457,7 @@ if (!mysqli_set_charset($conn, "utf8MB4")) {
     exit(json_encode($ans));
 }
 
+//查询是否有这个用户
 $sql = "select username from users where username = '$username'";
 $result = mysqli_query($conn, $sql);
 if (mysqli_fetch_array($result)) {
